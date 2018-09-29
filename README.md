@@ -1,2 +1,2 @@
-# greate-nodejs
+# great-nodejs
 get started with nodejs
