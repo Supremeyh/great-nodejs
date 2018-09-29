@@ -8,12 +8,11 @@ function start(route, handle) {
             var pathname = url.parse(req.url).pathname;
             console.log('req for '+ pathname + 'is received.');
 
-            res.writeHead(200, {"Content-Type": "text/plain"});
+            route(handle, pathname, res)
 
-            var content = route(handle, pathname);
-
-            res.write(content);
-            res.end();
+            // res.writeHead(200, {"Content-Type": "text/plain"});
+            // res.write(content);
+            // res.end();
         })
         .listen(8888);
 

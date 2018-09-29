@@ -1,20 +1,23 @@
 var exec = require('child_process').exec;
 
-function start() {
+function start(res) {
     console.log('start')
-    
-    var content = 'empty';
 
-    exec("find /", function(error,stdout,stderr){
-        content = stdout;
+    exec("find /", 
+    { timeout: 10000, maxBuffer: 20000 * 1024},
+    function(error,stdout,stderr){
+        res.writeHead(200, {"Content-Type": "text/plain"});
+        res.write(stdout);
+        res.end();
     })
 
-    return content;
 }
 
-function upload() {
+function upload(res) {
     console.log('upload')
-    return 'upload'
+    res.writeHead(200, {"Content-Type": "text/plain"});
+    res.write('upload');
+    res.end();
 }
 
 exports.start = start
