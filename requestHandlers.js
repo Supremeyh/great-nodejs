@@ -1,5 +1,6 @@
 // var exec = require('child_process').exec;
 var querystring = require('querystring');
+var fs = require('fs');
 
 function start(res) {
     console.log('start')
@@ -13,9 +14,10 @@ function start(res) {
                 <title>Document</title>
             </head>
             <body>
-                <form action="/upload" method="post">
+                <form action="/upload" method="post" enctype="multipart/form-data">
                     <textarea name="text" id="text" cols="30" rows="10"></textarea>
-                    <input type="submit" value="Submit File"/>
+                    <input type="file" value="upload"/>
+                    <input type="submit" value="Upload File"/>
                 </form>
             </body>
         </html>
@@ -43,5 +45,22 @@ function upload(res, postData) {
     res.end();
 }
 
+function show (res, postData) {
+    console.log('request handler show was called')
+    fs.readFile('/tem/test.png', 'binary', function(error, file) {
+        if (error) {
+            res.writeHead(500, {"Content-Type": "text/plain"})
+            res.write(error + '\n');
+            res.end()
+        } else {
+            res.writeHead(200, {"Content-Type": "image/png"});
+            res.write(file, "binary");
+            res.end()
+        }
+
+    })
+}
+
 exports.start = start
 exports.upload = upload
+exports.show = show
