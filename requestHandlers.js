@@ -1,8 +1,9 @@
 // var exec = require('child_process').exec;
 var querystring = require('querystring');
 var fs = require('fs');
+var formidable = require('formidable');
 
-function start(res) {
+function start(response) {
     console.log('start')
 
     var body = `
@@ -15,8 +16,7 @@ function start(res) {
             </head>
             <body>
                 <form action="/upload" method="post" enctype="multipart/form-data">
-                    <textarea name="text" id="text" cols="30" rows="10"></textarea>
-                    <input type="file" value="upload"/>
+                    <input type="file" name="upload"  multiple="multiple"/>
                     <input type="submit" value="Upload File"/>
                 </form>
             </body>
@@ -31,31 +31,36 @@ function start(res) {
     //     res.end();
     // })
 
-    res.writeHead(200, {"Content-Type": "text/html"});
-    res.write(body);
-    res.end();
+    response.writeHead(200, {"Content-Type": "text/html"});
+    response.write(body);
+    response.end();
 
 }
 
-function upload(res, postData) {
+function upload(response, request) {
     console.log('upload')
-    res.writeHead(200, {"Content-Type": "text/plain"});
-    // res.write('you have sent: ' + postData);
-    res.write('you have sent: ' + querystring.parse(postData).text);
-    res.end();
+
+    var form = new formidable.IncomingForm()
+    form.parse(request,function(error, fields, files) {
+        fs.renameSync(files.upload.path, '/tmp/test.png')
+    })
+    response.writeHead(200, {"Content-Type": "text/html"});
+    response.write('received image: ')
+    response.write("<img src='/show' />");
+    response.end();
 }
 
-function show (res, postData) {
+function show (response) {
     console.log('request handler show was called')
-    fs.readFile('/tem/test.png', 'binary', function(error, file) {
+    fs.readFile('/tmp/test.png', 'binary', function(error, file) {
         if (error) {
-            res.writeHead(500, {"Content-Type": "text/plain"})
-            res.write(error + '\n');
-            res.end()
+            response.writeHead(500, {"Content-Type": "text/plain"})
+            response.write(error + '\n');
+            response.end()
         } else {
-            res.writeHead(200, {"Content-Type": "image/png"});
-            res.write(file, "binary");
-            res.end()
+            response.writeHead(200, {"Content-Type": "image/png"});
+            response.write(file, "binary");
+            response.end()
         }
 
     })
