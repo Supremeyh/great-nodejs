@@ -1,7 +1,5 @@
 var http = require("http");
 var url = require("url");
-var fomidable = require('formidable')
-
 
 function start(route, handle) {
     function onRequest (request, response) {
@@ -9,7 +7,6 @@ function start(route, handle) {
         console.log('request for '+ pathname + 'is received.');
 
         route(handle, pathname, response, request);
-
 
     }
 
