@@ -1,4 +1,5 @@
 // var exec = require('child_process').exec;
+var querystring = require('querystring');
 
 function start(res) {
     console.log('start')
@@ -34,10 +35,11 @@ function start(res) {
 
 }
 
-function upload(res) {
+function upload(res, postData) {
     console.log('upload')
     res.writeHead(200, {"Content-Type": "text/plain"});
-    res.write('upload');
+    // res.write('you have sent: ' + postData);
+    res.write('you have sent: ' + querystring.parse(postData).text);
     res.end();
 }
 
