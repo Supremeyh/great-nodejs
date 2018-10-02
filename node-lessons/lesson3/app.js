@@ -22,17 +22,29 @@ app.get('/', function(req, res,next) {
 
         // sres.text 里面存储着网页的 html 内容，将它传给 cheerio.load 之后就可以得到一个实现了 jquery 接口的变量，习惯性地将它命名为 $
         var $ = cheerio.load(sres.text)
+
         var items = []
+        var items2 = []
+
+        $('#topic_list .cell .user_avatar img').each((index, ele) => {
+            var $ele = $(ele)
+            var author = $ele.attr('title')
+            items.push({
+                "作者": author
+            })
+        })
 
         $("#topic_list .cell .topic_title").each(function(index, ele){
             var $ele= $(ele)
             var title = $ele.attr('title')
             var href = $ele.attr('href')
-            items.push({
+            items2.push({
                 "标题": title,
                 "地址": 'https://cnodejs.org' + href
             })
         })
+
+        items = [...items, ...items2]
 
         res.send(items)
 
