@@ -1,0 +1,16 @@
+{
+  "name": "lesson6",
+  "version": "1.0.0",
+  "description": "测试用例：mocha，should，istanbul",
+  "main": "main.js",
+  "scripts": {
+    "test": "make test"
+  },
+  "author": "sea",
+  "license": "MIT",
+  "devDependencies": {
+    "istanbul": "^0.4.5",
+    "mocha": "^5.2.0",
+    "should": "^13.2.3"
+  }
+}
