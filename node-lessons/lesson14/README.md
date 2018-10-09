@@ -10,5 +10,5 @@ js最佳实践
 恰好，无论 Number, String, Hash, Array 以何种方式组合，都能被完美地 JSON.stringify。所以在 JS 中，我们很多时候不去创建什么类啊，不去搞什么面向原型编程啊。在需要管理同质化数据时，一个 Array 包裹他们；在需要管理非同质数据的 key-value 结构时，一个 Object 字面量包裹他们。
 5、异步控制，Async、EventProxy
 Async 就像一只大手，掌控着局面；EventProxy 是个通讯兵，随叫随到为您服务。Async 插入式地在控制，EventProxy 悠哉地呼叫闭包之外。
-用了 Async，代码稍显局促；用 EventProxy 的话，战线可以随意拉长。
-还记得 if 和 goto 之争吗？没错，Async 是 if，EventProxy 是 goto。两者虽能实现同样逻辑，但后者需要更深内力。
+用了 Async，代码稍显局促；用 EventProxy 的话，战线可以随意拉长。还记得 if 和 goto 之争吗？没错，Async 是 if，EventProxy 是 goto。两者虽能实现同样逻辑，但后者需要更深内力。EventProxy 又怎么用呢？在你需要的地方，定义 something.on(‘hehe’, function)。在你高兴时，something.emit(‘hehe’, data)。代码逻辑乱跳。
+
