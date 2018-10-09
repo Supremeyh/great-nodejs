@@ -2,14 +2,21 @@ var app = require('../app')
 
 var supertest = require('supertest')
 var request = supertest(app)
+// cookie 持久化,  获取一个 agent 对象
+// var agent = supertest.agent(app)
+// 或者，在发起请求时，调用 .set('Cookie', 'a cookie string') 这样的方式。
+var userCookie;
 
 var should = require('should')
 
 describe('test/app.test.js',function(){
     it('should return 55 when n is 10', function(done){
+        // .query 方法用来传 querystring，.send 方法用来传 body。它们都可以传 Object 对象进去, 在这里，我们等于访问的是 /fib?n=10
         request.get('/fib')
             .query({n:10})
             .end(function(err, res){
+                userCookie = res.headers['set-cookie'] //获取cookie
+                // 由于 http 返回的是 String，所以我要传入 '55'。
                 res.text.should.equal('55')
                 done(err)
             })
@@ -21,6 +28,7 @@ describe('test/app.test.js',function(){
         request.get('/fib')
             .query({n:n})
             .expect(statusCode)
+            // .set('cookie', userCookie) // 设置cookie 
             .end(function(err,res){
                 res.text.should.equal(expect)
                 done(err)

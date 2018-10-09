@@ -1,3 +1,11 @@
+/**
+ 测试用例:supertest
+
+    学习 supertest 的使用 (https://github.com/tj/supertest ),supertest 是 superagent 的孪生库,他们的 API 是一模一样的。
+        superagent 是用来抓取页面用的，而 supertest，是专门用来配合 express（准确来说是所有兼容 connect的web框架进行集成测试的。
+
+ */
+
 var express = require('express')
 
 
