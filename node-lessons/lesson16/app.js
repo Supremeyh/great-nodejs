@@ -50,7 +50,7 @@ session 的运作通过一个 session_id 来进行。session_id 通常是存放�
 当你下次访问时，cookie 会带有这个字符串，然后浏览器就知道你是上次访问过的某某某，然后从服务器的存储中取出上次记录在你身上的数据。
 由于字符串是随机产生的，而且位数足够多，所以也不担心有人能够伪造。
 
-session 可以存放在 1）内存、2）cookie本身、3）redis 或 memcached 等缓存中,比较常见 4）数据库中,查询效率低。
+session 可以存放在 1）内存,不方便进程间共享、2）cookie本身，增大了数据量传输、3）redis 或 memcached 等缓存中,比较常见 4）数据库中,查询效率低。
 
 express 中操作 session 要用到 express-session (https://github.com/expressjs/session ) ,
 主要的方法就是 session(options)，其中 options 中包含可选参数，主要有：
@@ -67,13 +67,13 @@ express 中操作 session 要用到 express-session (https://github.com/expressj
 // 一、在内存中存储 session, express-session 默认使用内存来存 session，对于开发调试来说很方便。
 // var express = require('express')
 
-// var session = require('express-session')
+// var expressSession = require('express-session')
 
 // var app = express()
 
 // app.listen(5201)
 
-// app.use(session({
+// app.use(expressSession({
 //     secret: 'recommand 128 bytes random string',
 //     cookie: {maxAge: 60*1000}
 // }))
@@ -93,19 +93,19 @@ express 中操作 session 要用到 express-session (https://github.com/expressj
 // 二、在 redis 中存储 session, session 存放在内存中不方便进程间共享，因此可以使用 redis 等缓存来存储 session。
 // 可以使用 connect-redis 模块(https://github.com/tj/connect-redis )来得到 redis 连接实例，然后在 session 中设置存储方式为该实例。
 var express = require('express')
-var session = require('express-session')
-var redisStore = require('connect-redis')(session)
+var expressSession = require('express-session')
+var redisStore = require('connect-redis')(expressSession)
 
 var app = express()
 
 app.listen(5201)
 
-app.use(session({
-    // name: 'session_id',
+app.use(expressSession({
+    name: 'session_id',
     store: new redisStore(),
     secret: 'somesecrettoken',
     resave:false,
-    // cookie: {httpOnly: true,secure:false,maxAge:60*1000}
+    cookie: {httpOnly: true,secure:false,maxAge:60*1000}
 }))
 
 app.use(function(req,res,next){
@@ -125,3 +125,23 @@ app.get('/',function(req,res){
         console.log(req.session)
     }
 })
+
+
+
+/**
+ signedCookie
+ 
+ 我有一些数据，不想存在 session 中，想存在 cookie 中，怎么保证不被篡改呢？答案很简单，签名，专业点说，叫 信息摘要算法。
+ 假设我的服务器有个秘密字符串，是 this_is_my_secret_and_fuck_you_all，我为用户 cookie 的 dotcom_user 字段设置了个值sea。cookie 本应是
+ {dotcom_user: 'sea'}
+ 而如果我们签个名，比如把 dotcom_user 的值跟我的 secret_string 做个 sha1
+sha1('this_is_my_secret_and_fuck_you_all' + 'sea') === '4850a42e3bc0d39c978770392cbd8dc2923e3d1d'
+然后把 cookie 变成这样
+{
+  dotcom_user: 'sea',
+  'dotcom_user.sig': '4850a42e3bc0d39c978770392cbd8dc2923e3d1d',
+}
+这样一来，用户就没法伪造信息了。一旦它更改了 cookie 中的信息，则服务器会发现 hash 校验的不一致。
+
+毕竟他不懂我们的 secret_string 是什么，而暴力破解哈希值的成本太高。
+ */
