@@ -2,10 +2,11 @@ var mongoose = require('mongoose')
 
 // 连接数据库
 // 格式 mongoose.connect('mongodb://username:password@host:port/database?options...',options);
-mongoose.connect('mongodb://localhost/test',{useNewUrlParser: true},function(err, res){
+// mongoose.connect('mongodb://localhost/test',{useNewUrlParser: true},function(err, res){
+mongoose.connect('mongodb://127.0.0.1:27017/test',{useNewUrlParser: true},function(err, res){
         if(err){
             console.log('====unconnect=====')
-        } else{
+        } else{ 
             console.log('=====connected=====')
         }
     })
@@ -22,13 +23,11 @@ mongoose.connect('mongodb://localhost/test',{useNewUrlParser: true},function(err
     })
 
 
-// Schema主要用于定义MongoDB中集合Collection里文档document的结构　　
-// 定义Schema非常简单，指定字段名和类型即可
-// 通过mongoose.Schema来调用Schema，然后使用new方法来创建schema对象
+// Schema:定义集合结构（定义表的列）,一种以文件形式存储的数据库模型骨架,主要用于定义MongoDB中集合Collection里文档document的结构,
+// 定义Schema非常简单，指定字段名和类型即可,通过mongoose.Schema来调用Schema，然后使用new方法来创建schema对象
 var Schema = mongoose.Schema
 var mySchema = new Schema({
     name: String,
-    num: Number,
     date: {type: Date, default: Date.now}
 })
 
