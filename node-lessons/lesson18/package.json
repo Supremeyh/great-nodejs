@@ -1,0 +1,17 @@
+{
+  "name": "lesson18",
+  "version": "1.0.0",
+  "description": "connect中间件",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "sea",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "compression": "^1.7.3",
+    "connect": "^3.6.6",
+    "cookie-session": "^2.0.0-beta.3"
+  }
+}
